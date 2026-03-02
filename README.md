@@ -125,9 +125,9 @@ GitHub 저장소 페이지를 새로고침했을 때 `index.html`, `server.js`, 
 
 1. [vercel.com](https://vercel.com) 가입 후 **Add New → Project**.
 2. GitHub 저장소 연결 후 **Import**.
-3. **Root Directory**를 이 프로젝트 폴더로 지정 (저장소 루트가 프로젝트면 그대로).
-4. **Build Command**: 비워 두거나 `npm run build`가 없다면 비움.
-5. **Output Directory**: 비워 두거나 `./` (Vercel이 `index.html`과 `api/`를 자동 인식).
+3. **Root Directory**: 저장소 루트에 `index.html`과 `api/` 폴더가 있으면 비워 둠. **`index.html`이 하위 폴더(예: `html-app`) 안에 있으면** Root Directory에 `html-app` 입력.
+4. **Build Command**: 비워 두기 (빈 칸).
+5. **Output Directory**: 비워 두기.
 6. **Deploy** 클릭.
 7. 배포 후 나온 URL(예: `https://homefinding-xxx.vercel.app`)로 접속.
 
