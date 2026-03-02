@@ -20,7 +20,7 @@ app.get('/api/naver-listings', async (req, res) => {
     const list = await getList(req.query);
     res.json(list);
   } catch (e) {
-    console.error('Naver backend error:', e.reason || e.message, e.message);
+    console.error('Naver backend error:', e.reason || e.message, e.code || '', e.message);
     res.status(500).json({
       error: '네이버 부동산 조회 실패',
       detail: e.message,
