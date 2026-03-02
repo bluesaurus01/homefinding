@@ -131,6 +131,8 @@ GitHub 저장소 페이지를 새로고침했을 때 `index.html`, `server.js`, 
 6. **Deploy** 클릭.
 7. 배포 후 나온 URL(예: `https://homefinding-xxx.vercel.app`)로 접속.
 
+**Redeploy 방법**: (1) Git에 수정 반영 후 `git push` 하면 자동 재배포. (2) Vercel 대시보드 → 프로젝트 → **Deployments** 탭 → 최신 배포 오른쪽 **⋯** → **Redeploy**. 설정(Root Directory 등) 변경 후에는 Save 후 반드시 **Redeploy** 한 번 실행. **cannot GET /** 가 나오면: **Settings → General**에서 **Framework Preset**을 **Other**로, **Root Directory**는 `index.html`이 있는 폴더(저장소 루트면 비움)로 맞춘 뒤 Redeploy.
+
 - API는 자동으로 `https://도메인/api/naver-listings` 로 제공됩니다.
 - `index.html`에 `APP_BACKEND_URL`을 넣지 **않으면** 같은 도메인의 `/api/naver-listings`를 사용합니다.
 - 네이버 지도 API 키는 Vercel 도메인(예: `*.vercel.app`)을 콘솔에 등록하세요.
