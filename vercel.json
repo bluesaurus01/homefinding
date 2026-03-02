@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/naver-listings/index.js": {
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  }
+}
