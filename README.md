@@ -119,9 +119,11 @@ GitHub 저장소 페이지를 새로고침했을 때 `index.html`, `server.js`, 
 
 ---
 
-### 대안 1: Vercel 한 번에 배포 (프론트 + API 동일 도메인, 추천)
+### 대안 1: Vercel 한 번에 배포 (프론트 + API 동일 도메인)
 
 **한 플랫폼에서 프론트와 백엔드 API를 함께** 배포합니다. `APP_BACKEND_URL` 설정 없이 같은 도메인에서 동작합니다.
+
+- 네이버가 Vercel 서버 IP를 막으면 **"일시적인 네트워크 오류 / NETWORK_OR_REQUEST"** 가 날 수 있습니다. 그럴 때는 아래 **"Vercel(프론트) + 외부 백엔드"** 로 전환하세요.
 
 1. [vercel.com](https://vercel.com) 가입 후 **Add New → Project**.
 2. GitHub 저장소 연결 후 **Import**.
@@ -136,6 +138,34 @@ GitHub 저장소 페이지를 새로고침했을 때 `index.html`, `server.js`, 
 - API는 자동으로 `https://도메인/api/naver-listings` 로 제공됩니다.
 - `index.html`에 `APP_BACKEND_URL`을 넣지 **않으면** 같은 도메인의 `/api/naver-listings`를 사용합니다.
 - 네이버 지도 API 키는 Vercel 도메인(예: `*.vercel.app`)을 콘솔에 등록하세요.
+
+---
+
+### ★ Vercel(프론트) + 외부 백엔드 — 네트워크 오류 시 추천
+
+**Vercel 결제를 유지한 채**, 프론트만 Vercel에 두고 **API는 Railway 또는 Render**에 따로 배포하는 방식입니다. 네이버가 Vercel IP를 막아도 외부 백엔드 IP로 요청하므로 매물 불러오기가 동작할 가능성이 높습니다.
+
+**1단계: 백엔드 배포 (Railway 또는 Render)**
+
+| 서비스 | 무료 한도 | 안내 |
+|--------|-----------|------|
+| [Railway](https://railway.app) | 월 크레딧 제한 | **New Project** → **Deploy from GitHub repo** → 이 저장소 선택 → **Settings**: Build 없음 또는 `npm install`, Start: `node server.js` → **Networking → Generate Domain** → URL 복사 (예: `https://xxx.up.railway.app`) |
+| [Render](https://render.com) | 무료 티어 (15분 미사용 시 슬립) | **New → Web Service** → 저장소 연결 → **Build**: `npm install`, **Start**: `node server.js` → **Create** → URL 복사 (예: `https://html-app-xxxx.onrender.com`) |
+
+**2단계: Vercel에 백엔드 URL 넣기**
+
+1. Vercel 대시보드 → 해당 프로젝트 → **Settings** → **Environment Variables**.
+2. **Key**: `BACKEND_URL`  
+   **Value**: 1단계에서 복사한 URL (끝에 슬래시 없이, 예: `https://xxx.up.railway.app`).
+3. **Save** 후 **Deployments** → 최신 배포 **⋯** → **Redeploy**.
+
+**3단계: Vercel 빌드 시 config 주입**
+
+1. **Settings** → **General** → **Build & Development Settings**.
+2. **Build Command**에 `npm run build` 입력 (비어 있으면 추가).
+3. **Save** 후 다시 **Redeploy**.
+
+이후 배포 시마다 `npm run build`가 실행되며, `BACKEND_URL`이 `config.js`에 주입됩니다. 프론트는 Vercel에 그대로 두고, 매물 요청만 설정한 외부 백엔드로 갑니다.
 
 ---
 
