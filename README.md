@@ -119,6 +119,61 @@ GitHub 저장소 페이지를 새로고침했을 때 `index.html`, `server.js`, 
 
 ---
 
+### 대안 1: Vercel 한 번에 배포 (프론트 + API 동일 도메인, 추천)
+
+**한 플랫폼에서 프론트와 백엔드 API를 함께** 배포합니다. `APP_BACKEND_URL` 설정 없이 같은 도메인에서 동작합니다.
+
+1. [vercel.com](https://vercel.com) 가입 후 **Add New → Project**.
+2. GitHub 저장소 연결 후 **Import**.
+3. **Root Directory**를 이 프로젝트 폴더로 지정 (저장소 루트가 프로젝트면 그대로).
+4. **Build Command**: 비워 두거나 `npm run build`가 없다면 비움.
+5. **Output Directory**: 비워 두거나 `./` (Vercel이 `index.html`과 `api/`를 자동 인식).
+6. **Deploy** 클릭.
+7. 배포 후 나온 URL(예: `https://homefinding-xxx.vercel.app`)로 접속.
+
+- API는 자동으로 `https://도메인/api/naver-listings` 로 제공됩니다.
+- `index.html`에 `APP_BACKEND_URL`을 넣지 **않으면** 같은 도메인의 `/api/naver-listings`를 사용합니다.
+- 네이버 지도 API 키는 Vercel 도메인(예: `*.vercel.app`)을 콘솔에 등록하세요.
+
+---
+
+### 대안 2: Railway (백엔드) + Cloudflare Pages (프론트)
+
+Render 대신 **Railway**로 백엔드만 배포하는 방법입니다.
+
+1. [railway.app](https://railway.app) 가입 → **New Project** → **Deploy from GitHub repo**.
+2. 이 프로젝트 저장소 선택.
+3. **Settings**에서 **Root Directory**를 프로젝트 폴더로, **Build Command**: `npm install`, **Start Command**: `node server.js`.
+4. **Settings → Networking → Generate Domain**으로 URL 생성 (예: `https://xxx.up.railway.app`).
+5. 프론트는 **Cloudflare Pages**로 배포하고, `index.html`의 `<head>`에 다음 추가:
+   ```html
+   <script>window.APP_BACKEND_URL = 'https://xxx.up.railway.app';</script>
+   ```
+
+Railway 무료 티어는 월 크레딧 제한이 있으니 사용량을 확인하세요.
+
+---
+
+### 대안 3: Fly.io (백엔드) + 정적 호스팅 (프론트)
+
+**Fly.io**에 Node 백엔드를 배포할 수 있습니다.
+
+1. [fly.io](https://fly.io) 가입 후 CLI 설치: `curl -L https://fly.io/install.sh | sh`
+2. 프로젝트 폴더에서: `fly launch` (기존 app 사용 시 `fly apps create` 등 안내에 따름).
+3. `Dockerfile`이 없다면 Fly가 Node 앱을 자동 감지하거나, 다음으로 생성:
+   ```dockerfile
+   FROM node:18-slim
+   WORKDIR /app
+   COPY package*.json ./
+   RUN npm install --production
+   COPY . .
+   CMD ["node", "server.js"]
+   ```
+4. `fly deploy`로 배포 후 URL 확인 (예: `https://xxx.fly.dev`).
+5. 프론트 배포 시 `window.APP_BACKEND_URL = 'https://xxx.fly.dev'` 설정.
+
+---
+
 ### 1. Netlify (drag & drop)
 
 - Go to [netlify.com](https://www.netlify.com) → **Add new site** → **Deploy manually**.
