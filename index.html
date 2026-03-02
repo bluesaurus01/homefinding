@@ -827,6 +827,7 @@ async function fetchListings() {
       + '&gu=' + encodeURIComponent(selectedGu)
       + '&dong=' + encodeURIComponent(selectedDong || '')
       + '&type=' + encodeURIComponent(activeType);
+    if (typeof console !== 'undefined' && console.log) console.log('[집잡아] 매물 요청 백엔드:', backendBase || '(같은 도메인 /api/naver-listings)');
     var nRes = await fetch(backendUrl);
     if (nRes.ok) {
       var nData = await nRes.json();
@@ -881,6 +882,7 @@ async function fetchListings() {
     '<div class="empty-title">데이터 불러오기에 실패했습니다</div>' +
     '<div class="empty-desc" style="text-align:left;max-width:420px;">' +
     (failReason ? '<strong>이유:</strong> ' + failReason + '<br><br>' : '') +
+    '확인: F12 → Network 탭에서 요청 URL이 Render 주소인지 보세요. Render 사용 시 첫 요청은 30초 걸릴 수 있습니다.<br>' +
     '해결: 터미널에서 <code>npm run backend</code> 실행 후 다시 시도. 지역은 시·구·동 형식으로 선택하고, 원주시 무실동은 동 입력란에 "무실동"을 넣어보세요.</div>' +
     '</div>';
   updateMapEmpty();
